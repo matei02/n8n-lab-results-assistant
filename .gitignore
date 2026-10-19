@@ -1,0 +1,17 @@
+# Credentials and local data never belong in this repo
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+
+# Raw n8n exports (may contain credentials, webhook IDs, pinned data)
+*.raw.json
+export*/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
