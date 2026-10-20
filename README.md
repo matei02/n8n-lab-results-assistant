@@ -8,7 +8,7 @@ An n8n workflow for a medical lab results service: doctors and patients sign up 
 
 ## The problem
 
-Getting lab results usually means logging into a portal, waiting for an email, or calling the lab. The idea: people already use WhatsApp, so let them ask for their results there ("send me everything after 1 August"), while making sure nobody can get someone else's results. Doctors should get the results of their own patients the same way.
+I built this for a clinic. The idea: patients ask for their lab results on WhatsApp ("send me everything after 1 August"), doctors get the results of their own patients the same way, and nobody can get someone else's results. The clinic stopped the collaboration before the workflow was connected to their systems or to any real data.
 
 ## What it does
 
@@ -71,8 +71,11 @@ Exported with an allowlist: I started from an empty copy (nodes, names, connecti
 
 Solo project: I built this workflow in n8n, including the agents' prompts.
 
+**About this repository:** the workflow is mine. I exported and packaged it for GitHub (this README, screenshots, demo GIF, removing private data) with help from an AI assistant, which is why the single commit lists Claude as co-author.
+
 ## Status and limitations
 
+- **Never used with real people or real data.** Only I tested it, with test data.
 - In this export the "Get all Results" tool is disabled and the prompt says rate limiting is "currently disabled".
 - **Authentication and permissions are decided by the AI agent, following the prompt.** The Sheets tools themselves do not enforce roles: for example, the doctor filter in "Get all Patients" is a value the model fills in. A successful prompt injection could make the agent read data it should not. The prompt is strict about this, but it is not a guarantee.
 - **IDs are allocated by an LLM** reading a counters sheet and returning the next number. That is not deterministic and two sign-ups at the same time could get the same number.
