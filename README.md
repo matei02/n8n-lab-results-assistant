@@ -51,13 +51,20 @@ flowchart LR
 |---|---|
 | ![Doctor registration flow](docs/doctor-registration.png) | ![WhatsApp flow](docs/whatsapp-chatbot.png) |
 
+## Prompts
+
+Each agent's system prompt, input and output format, one file per agent, copied from the workflow file:
+- [WhatsApp assistant](prompts/whatsapp-assistant.md): authentication, permissions, date filters, the JSON answer
+- [Doctor-name matcher](prompts/doctor-name-matcher.md)
+- [Patient ID agent](prompts/patient-id-agent.md), [Doctor ID agent](prompts/doctor-id-agent.md), [Result ID agent](prompts/result-id-agent.md)
+
 ## Tech stack
 
 n8n (Form Trigger, AI Agent, Structured Output Parser with auto-fix, Simple Memory, Google Sheets and Google Sheets tool nodes, Google Cloud Storage, WhatsApp Business Cloud trigger and send, Code node, If/Filter/Loop), OpenAI API (gpt-5-mini, gpt-4.1-mini, gpt-4o).
 
 ## How to run it
 
-1. Import `workflow/lab-results-assistant.workflow.json` into n8n (Workflows > Import from file). Works on n8n 2.4.7.
+1. Import `workflow/lab-results-assistant.workflow.json` into n8n (Workflows > Import from file). Import tested on n8n 2.4.7.
 2. Create credentials and select them in the nodes: OpenAI, Google Sheets (OAuth), Google Cloud Storage.
 3. **Set up WhatsApp on Meta's side.** A phone number alone is not enough; the bot needs the WhatsApp Business Platform:
    - a Meta developer account, a Meta business portfolio and a business app in Meta for Developers with the WhatsApp product added
@@ -82,7 +89,7 @@ Solo project: I built this workflow in n8n, including the agents' prompts.
 
 - **Never used with real people or real data.** Only I tested it, with test data.
 - The "Get all Results" tool and rate limiting are switched off.
-- **Authentication and permissions are decided by the AI agent, following the prompt.** The Sheets tools themselves do not enforce roles: for example, the doctor filter in "Get all Patients" is a value the model fills in. A successful prompt injection could make the agent read data it should not. The prompt is strict about this, but it is not a guarantee.
+- **Authentication and permissions are decided by the AI agent, following [the prompt](prompts/whatsapp-assistant.md).** The Sheets tools themselves do not enforce roles: for example, the doctor filter in "Get all Patients" is a value the model fills in. A successful prompt injection could make the agent read data it should not. The prompt is strict about this, but it is not a guarantee.
 - **IDs are allocated by an LLM** reading a counters sheet and returning the next number. That is not deterministic and two sign-ups at the same time could get the same number.
 - Medical data (names, dates of birth, phone numbers, result files) lives in Google Sheets and a bucket; there is no consent flow, retention policy or audit log.
 - The date filter uses the file's upload/storage time in the bucket, not the date of the test.
