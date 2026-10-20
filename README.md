@@ -58,14 +58,19 @@ n8n (Form Trigger, AI Agent, Structured Output Parser with auto-fix, Simple Memo
 ## How to run it
 
 1. Import `workflow/lab-results-assistant.workflow.json` into n8n (Workflows > Import from file). I checked the import on n8n 2.4.7.
-2. Create credentials and select them in the nodes: OpenAI, Google Sheets (OAuth), Google Cloud Storage, WhatsApp Business Cloud (trigger and send).
-3. Create a Google Sheet with the tabs `doctori`, `pacienti`, `rezultate-analize`, `counters`, `authentications` (column names are visible in the Sheets nodes) and select it where you see `<LONG_ID_1>`. Create a bucket and set its name in the Cloud Storage nodes.
-4. Put your WhatsApp Business phone number ID in the WhatsApp nodes (`<PHONE_…>` placeholders) and in the form completion messages.
-5. Activate the workflow, register a doctor and a patient through the forms, upload a PDF, then write to the WhatsApp number.
+2. Create credentials and select them in the nodes: OpenAI, Google Sheets (OAuth), Google Cloud Storage.
+3. **Set up WhatsApp on Meta's side.** A phone number alone is not enough; the bot needs the WhatsApp Business Platform:
+   - a Meta developer account, a Meta business portfolio and a business app in Meta for Developers with the WhatsApp product added
+   - a phone number registered on that app (Meta gives you a test number to start with) and its phone number ID
+   - an access token and the WhatsApp Business Account ID for n8n's "WhatsApp" credential (used by the send nodes)
+   - the app's ID and secret for n8n's "WhatsApp OAuth" credential (used by the WhatsApp Trigger, which registers the webhook for incoming messages)
+4. Create a Google Sheet with the tabs `doctori`, `pacienti`, `rezultate-analize`, `counters`, `authentications` (column names are visible in the Sheets nodes) and select it where you see `<LONG_ID_1>`. Create a bucket and set its name in the Cloud Storage nodes.
+5. Put your phone number ID in the WhatsApp send nodes (`<PHONE_…>` placeholders) and your bot's number in the form completion messages.
+6. Activate the workflow, register a doctor and a patient through the forms, upload a PDF, then write to the bot on WhatsApp.
 
 ### What was removed from this export
 
-Exported with an allowlist: I started from an empty copy (nodes, names, connections) and restored only fields worth showing, after a scan. Credentials, webhook IDs, pinned data, the spreadsheet ID, phone numbers, emails and URLs were removed or replaced by placeholders such as `<LONG_ID_1>` or `<PHONE_2>`; the same original value always gets the same placeholder. Some example IDs in the prompts (like `P-ABC-001`) were also caught by the scan and show up as `P-<JIRA_KEY_n>`. The prompts and the node logic are otherwise as I left them.
+Exported with an allowlist: I started from an empty copy (nodes, names, connections) and restored only fields worth showing, after a scan. Credentials, webhook IDs, pinned data, the spreadsheet ID, phone numbers, emails and URLs were removed or replaced by placeholders such as `<LONG_ID_1>` or `<PHONE_2>`; the same original value always gets the same placeholder. The prompts and the node logic are otherwise as I left them.
 
 ## My contribution
 
@@ -86,6 +91,7 @@ Solo project: I built this workflow in n8n, including the agents' prompts.
 ## What I would change for production
 
 - Move authentication and authorization into code: a one-time code sent on WhatsApp, a session table, and tools that only accept the authenticated user's ID (never a value chosen by the model).
+- Put a prompt-injection filter in front of the agent: a small classifier model (for example Meta's Prompt Guard or Azure Prompt Shields) that checks every incoming message and blocks suspicious ones before they reach the real agent. This is one extra layer, not a replacement for the permission checks in code above.
 - Allocate IDs with code (a Code node or a database sequence), not with a model.
 - Replace Google Sheets with a real database (for example Postgres) with encryption, access logs, consent and retention rules suitable for health data (GDPR).
 - Store the test date as metadata and filter on it.
