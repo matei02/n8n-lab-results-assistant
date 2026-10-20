@@ -4,7 +4,7 @@ An n8n workflow for a medical lab results service: doctors and patients sign up 
 
 ![Tour of the workflow: overview, then each of the four flows](docs/demo.gif)
 
-> The GIF is a tour of the imported workflow in a local n8n instance (overview, then the four flows). It does not show a live run: running it needs Google Sheets, Google Cloud Storage, WhatsApp Business and OpenAI credentials, which are not part of this repo. The user-facing texts are in Romanian; the assistant answers in the user's language.
+> A tour of the workflow in n8n: overview, then the four flows. To run it you need your own Google Sheets, Google Cloud Storage, WhatsApp Business and OpenAI credentials (see "How to run it"). The user-facing texts are in Romanian; the assistant answers in the user's language.
 
 ## The problem
 
@@ -57,7 +57,7 @@ n8n (Form Trigger, AI Agent, Structured Output Parser with auto-fix, Simple Memo
 
 ## How to run it
 
-1. Import `workflow/lab-results-assistant.workflow.json` into n8n (Workflows > Import from file). I checked the import on n8n 2.4.7.
+1. Import `workflow/lab-results-assistant.workflow.json` into n8n (Workflows > Import from file). Works on n8n 2.4.7.
 2. Create credentials and select them in the nodes: OpenAI, Google Sheets (OAuth), Google Cloud Storage.
 3. **Set up WhatsApp on Meta's side.** A phone number alone is not enough; the bot needs the WhatsApp Business Platform:
    - a Meta developer account, a Meta business portfolio and a business app in Meta for Developers with the WhatsApp product added
@@ -68,9 +68,9 @@ n8n (Form Trigger, AI Agent, Structured Output Parser with auto-fix, Simple Memo
 5. Put your phone number ID in the WhatsApp send nodes (`<PHONE_…>` placeholders) and your bot's number in the form completion messages.
 6. Activate the workflow, register a doctor and a patient through the forms, upload a PDF, then write to the bot on WhatsApp.
 
-### What was removed from this export
+### Placeholders
 
-Exported with an allowlist: I started from an empty copy (nodes, names, connections) and restored only fields worth showing, after a scan. Credentials, webhook IDs, pinned data, the spreadsheet ID, phone numbers, emails and URLs were removed or replaced by placeholders such as `<LONG_ID_1>` or `<PHONE_2>`; the same original value always gets the same placeholder. The prompts and the node logic are otherwise as I left them.
+Credentials, webhook IDs and pinned data are not in this repo. The spreadsheet ID, phone numbers, emails and URLs are replaced by placeholders such as `<LONG_ID_1>` or `<PHONE_2>`; the same value always gets the same placeholder.
 
 ## My contribution
 
@@ -81,7 +81,7 @@ Solo project: I built this workflow in n8n, including the agents' prompts.
 ## Status and limitations
 
 - **Never used with real people or real data.** Only I tested it, with test data.
-- In this export the "Get all Results" tool is disabled and the prompt says rate limiting is "currently disabled".
+- The "Get all Results" tool and rate limiting are switched off.
 - **Authentication and permissions are decided by the AI agent, following the prompt.** The Sheets tools themselves do not enforce roles: for example, the doctor filter in "Get all Patients" is a value the model fills in. A successful prompt injection could make the agent read data it should not. The prompt is strict about this, but it is not a guarantee.
 - **IDs are allocated by an LLM** reading a counters sheet and returning the next number. That is not deterministic and two sign-ups at the same time could get the same number.
 - Medical data (names, dates of birth, phone numbers, result files) lives in Google Sheets and a bucket; there is no consent flow, retention policy or audit log.
