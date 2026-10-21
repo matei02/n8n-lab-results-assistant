@@ -60,7 +60,7 @@ Each agent's system prompt, input and output format, one file per agent, copied 
 
 ## Tech stack
 
-n8n (Form Trigger, AI Agent, Structured Output Parser with auto-fix, Simple Memory, Google Sheets and Google Sheets tool nodes, Google Cloud Storage, WhatsApp Business Cloud trigger and send, Code node, If/Filter/Loop), OpenAI API (gpt-5-mini, gpt-4.1-mini, gpt-4o).
+n8n (Form Trigger, AI Agent, Structured Output Parser with auto-fix, Simple Memory, Google Sheets and Google Sheets tool nodes, Google Cloud Storage, WhatsApp Business Cloud trigger and send, Code node, If/Filter/Loop), OpenAI API (gpt-5-mini, gpt-4.1-mini, gpt-4o), WhatsApp Business Cloud API (Meta), Twilio (the bot's phone number).
 
 ## How to run it
 
@@ -68,7 +68,7 @@ n8n (Form Trigger, AI Agent, Structured Output Parser with auto-fix, Simple Memo
 2. Create credentials and select them in the nodes: OpenAI, Google Sheets (OAuth), Google Cloud Storage.
 3. **Set up WhatsApp on Meta's side.** A phone number alone is not enough; the bot needs the WhatsApp Business Platform:
    - a Meta developer account, a Meta business portfolio and a business app in Meta for Developers with the WhatsApp product added
-   - a phone number registered on that app (Meta gives you a test number to start with) and its phone number ID
+   - a phone number registered on that app (Meta gives you a test number to start with) and its phone number ID. The bot's number was a Twilio phone number registered on the WhatsApp Business Cloud API, which the n8n WhatsApp nodes use.
    - an access token and the WhatsApp Business Account ID for n8n's "WhatsApp" credential (used by the send nodes)
    - the app's ID and secret for n8n's "WhatsApp OAuth" credential (used by the WhatsApp Trigger, which registers the webhook for incoming messages)
 4. Create a Google Sheet with the tabs `doctori`, `pacienti`, `rezultate-analize`, `counters`, `authentications` (column names are visible in the Sheets nodes) and select it where you see `<LONG_ID_1>`. Create a bucket and set its name in the Cloud Storage nodes.
